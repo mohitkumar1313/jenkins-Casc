@@ -3,9 +3,9 @@ credentials:
     domainCredentials:
     - credentials:
       - string:
-          id: "jenkins"
+          id: "194a25d8-7a9e-4add-90ec-6e554f8ba194"
           scope: GLOBAL
-          secret: "{AQAAABAAAAAwV2XsCOn7wrQ2yiZkoR+j3Bw+/OP2q/hdFVn55CrDLhBV+eT5fdQq3tdQhJ2d4fSyVyDl1FgMqwQX7FeWBRdW8g==}"
+          secret: "{AQAAABAAAAAw1Y+EIk/wBQhoUlTqHmbHP983DOVafkbdr5Zdg1xoexFJ2qHLNfX1wsTA5Sn+0nrgYLS0vpWvjL9CNNWRQK/tkg==}"
 jenkins:
   agentProtocols:
   - "JNLP4-connect"
@@ -33,12 +33,6 @@ jenkins:
               key: "JENKINS_URL"
               value: "http://jenkins.default.svc.cluster.local:8080/"
           image: "jenkins/inbound-agent:3261.v9c670a_4748a_9-1"
-          livenessProbe:
-            failureThreshold: 0
-            initialDelaySeconds: 0
-            periodSeconds: 0
-            successThreshold: 0
-            timeoutSeconds: 0
           name: "jnlp"
           resourceLimitCpu: "512m"
           resourceLimitMemory: "512Mi"
@@ -49,7 +43,7 @@ jenkins:
         label: "jenkins-jenkins-agent"
         name: "default"
         namespace: "default"
-        nodeUsageMode: "NORMAL"
+        nodeUsageMode: NORMAL
         podRetention: "never"
         serviceAccount: "default"
         slaveConnectTimeout: 100
@@ -58,34 +52,6 @@ jenkins:
       - containers:
         - args: "9999999"
           command: "sleep"
-          envVars:
-          - envVar:
-              key: "JAVA_HOME"
-              value: "/opt/java/openjdk"
-          image: "bobbybabu007/jenkins-agent-k8s:2.0.0"
-          livenessProbe:
-            failureThreshold: 0
-            initialDelaySeconds: 0
-            periodSeconds: 0
-            successThreshold: 0
-            timeoutSeconds: 0
-          name: "agent"
-          workingDir: "/home/jenkins/agent"
-        id: "1c00dcd0-cd81-4afb-a775-fec22a02cff2"
-        label: "agent"
-        name: "agent"
-        namespace: "default"
-        yamlMergeStrategy: "override"
-      - containers:
-        - args: "9999999"
-          command: "sleep"
-          envVars:
-          - envVar:
-              key: "JAVA_HOME"
-              value: "/usr/lib/jvm/java-17-openjdk-amd64"
-          - envVar:
-              key: "PATH"
-              value: "/usr/lib/jvm/java-17-openjdk-amd64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
           image: "mohitsalgotra/mavenimage:latest"
           livenessProbe:
             failureThreshold: 0
@@ -95,7 +61,18 @@ jenkins:
             timeoutSeconds: 0
           name: "agent1"
           workingDir: "/home/jenkins/agent"
-        id: "215ebd84-f560-4cd9-9de1-f35f39e5a9f3"
+        - args: "9999999"
+          command: "sleep"
+          image: "mohitsalgotra/sonar-scanner:latest"
+          livenessProbe:
+            failureThreshold: 0
+            initialDelaySeconds: 0
+            periodSeconds: 0
+            successThreshold: 0
+            timeoutSeconds: 0
+          name: "sonar-scanner-container"
+          workingDir: "/home/jenkins/agent"
+        id: "251b057c-e856-4b38-b0bf-bb1e87caa273"
         label: "agent1"
         name: "agent1"
         namespace: "default"
@@ -108,7 +85,6 @@ jenkins:
   - "hudson.util.DoubleLaunchChecker"
   - "hudson.diagnosis.ReverseProxySetupMonitor"
   labelAtoms:
-  - name: "agent"
   - name: "agent1"
   - name: "built-in"
   - name: "jenkins-jenkins-agent"
@@ -183,10 +159,10 @@ unclassified:
   buildDiscarders:
     configuredBuildDiscarders:
     - "jobBuildDiscarder"
+  casCGlobalConfig:
+    configurationPath: "http://github.com/mohitkumar1313/jenkins-Casc.git"
   fingerprints:
     fingerprintCleanupDisabled: false
-    storage: "file"
-  junitTestResultStorage:
     storage: "file"
   location:
     adminAddress: "address not configured yet <nobody@nowhere>"
@@ -195,8 +171,6 @@ unclassified:
     charset: "UTF-8"
     useSsl: false
     useTls: false
-  mavenModuleSet:
-    localRepository: "default"
   pollSCM:
     pollingThreadCount: 10
   scmGit:
@@ -208,7 +182,7 @@ unclassified:
     showEntireCommitSummaryInChanges: false
     useExistingAccountWithSameEmail: false
   sonarGlobalConfiguration:
-    buildWrapperEnabled: true
+    buildWrapperEnabled: false
 tool:
   git:
     installations:
